@@ -25,7 +25,8 @@ if uploaded_file is not None:
     img = img.reshape(1, img_size, img_size, 1)
     
     prediction = model.predict(img)
-    pred_label = labels[int(np.round(prediction[0][0]))]
-    confidence = float(prediction[0][0]) if pred_label == "PNEUMONIA" else 1 - float(prediction[0][0])
-    
-    st.write(f"Prediction: **{pred_label}**")
+    prob = float(prediction[0][0])
+    pred_label = "PNEUMONIA" if prob >= 0.5 else "NORMAL"
+    confidence = prob if pred_label == "PNEUMONIA" else 1 - prob
+
+    st.write(f"Prediction: **{pred_label}** ({confidence*100:.2f}% confidence)")
